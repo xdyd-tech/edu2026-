@@ -30,6 +30,31 @@
 
         /* Active Link Style */
         .nav-link:active { color: #2563eb; transform: scale(0.95); }
+        
+        /* Toast Notification (404 Error Prevention) */
+        #toast {
+            visibility: hidden;
+            min-width: 320px;
+            background-color: #1e293b;
+            color: #fff;
+            text-align: center;
+            border-radius: 12px;
+            padding: 16px 20px;
+            position: fixed;
+            z-index: 9999;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 15px;
+            box-shadow: 0px 10px 25px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: opacity 0.3s, bottom 0.3s;
+        }
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+            bottom: 50px;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
@@ -38,7 +63,7 @@
     <nav class="fixed top-0 left-0 right-0 z-40 nav-glass shadow-sm">
         <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
             <div class="flex items-center gap-4">
-                <a href="../html" class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all font-bold text-sm">
+                <a href="#" onclick="handleNavigation(event, '../html', '홈')" class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all font-bold text-sm">
                     <i class="fas fa-home"></i> 홈
                 </a>
                 <div class="hidden sm:flex items-center gap-2 ml-2 border-l border-slate-200 pl-4">
@@ -66,7 +91,7 @@
                 데이터 속에 숨겨진 편견부터 문화권별 생사 판단 기준까지, 우리가 몰랐던 AI 윤리의 이면을 확인하세요.
             </p>
             <div class="flex flex-wrap justify-center gap-4">
-                <a href="./01/index.html" class="bg-indigo-600 hover:bg-indigo-700 px-8 py-4 rounded-2xl font-bold transition-all shadow-xl shadow-indigo-900/20">윤리배우기</a>
+                <a href="#" onclick="handleNavigation(event, './01/index.html', '윤리배우기')" class="bg-indigo-600 hover:bg-indigo-700 px-8 py-4 rounded-2xl font-bold transition-all shadow-xl shadow-indigo-900/20">윤리배우기</a>
                 <a href="#takeaway-1" class="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-2xl font-bold transition-all shadow-xl shadow-blue-900/20">학습 시작하기</a>
                 <button onclick="openModal()" class="bg-white/10 hover:bg-white/20 px-6 py-4 rounded-2xl font-bold transition border border-white/20">인포그래픽 미리보기</button>
             </div>
@@ -306,7 +331,21 @@
         </div>
     </footer>
 
+    <!-- Toast Notification Element -->
+    <div id="toast"></div>
+
     <script>
+        // Navigation Handler (Prevents 404 in Preview Environment)
+        function handleNavigation(event, path, name) {
+            event.preventDefault(); // 기본 이동 기능 차단
+            const toast = document.getElementById("toast");
+            toast.innerHTML = `<i class="fas fa-info-circle text-blue-400 mr-2"></i> 실제 서버에서는 <b class="text-blue-300">${name}</b>(${path}) 경로로 이동합니다.`;
+            toast.classList.add("show");
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3500);
+        }
+
         // Modal Logic
         function openModal() {
             const modal = document.getElementById('infoModal');
